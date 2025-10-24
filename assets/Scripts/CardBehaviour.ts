@@ -17,12 +17,23 @@ export default class CardBehaviour extends cc.Component {
     @property(cc.AudioClip)
     private swipeSFX: cc.AudioClip = null;
 
+    @property(cc.Texture2D)
+    private cursor: cc.Texture2D = null;
+
     private _isLocked: boolean = false;
     private _isRevealed: boolean = false;
 
     protected onLoad(): void {
         this.node.on(cc.Node.EventType.TOUCH_END, this.onClick, this);
         this.hide();
+
+        this.node.on(cc.Node.EventType.MOUSE_ENTER, () => {
+            document.body.style.cursor = `url("${this.cursor.nativeUrl}"), auto`;
+        });
+
+        this.node.on(cc.Node.EventType.MOUSE_LEAVE, () => {
+            document.body.style.cursor = 'auto';
+        });
     }
 
     init(sprite: cc.SpriteFrame) {

@@ -7,7 +7,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class GameController extends cc.Component {
 
-    @property(cc.Integer)
+    @property({type: cc.Integer})
     private maxAttempts: number = 24;
 
     @property(cc.Integer) 
@@ -51,7 +51,7 @@ export default class GameController extends cc.Component {
     public get attemptsRemaining(): number {
         return this._attemptsRemaining;
     }
-
+    
     start () {
         setMusicVolume(0.2);
         setSFXVolume(0.1);
