@@ -351,6 +351,15 @@
         "__uuid__": "f06691d8-fc5e-49c2-a1dc-7b46efd1c947"
       }
     ],
+    "pairSuccessSFX": {
+      "__uuid__": "2d0a8c35-53ab-4184-aee7-49b36fd3a208"
+    },
+    "pairFailSFX": {
+      "__uuid__": "a86a5850-bdc5-47b7-ba37-c90ab139c776"
+    },
+    "music": {
+      "__uuid__": "ec217ed4-b015-4059-a521-d95bea054e52"
+    },
     "_id": "eaqk9l0s5N3JztYNkIGhDa"
   },
   {

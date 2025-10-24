@@ -1,3 +1,5 @@
+import { playSFX } from "./Modules/Audio";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -11,6 +13,9 @@ export default class CardBehaviour extends cc.Component {
 
     @property(cc.Node)
     private frontNode: cc.Node = null;
+
+    @property(cc.AudioClip)
+    private swipeSFX: cc.AudioClip = null;
 
     private _isLocked: boolean = false;
     private _isRevealed: boolean = false;
@@ -36,6 +41,8 @@ export default class CardBehaviour extends cc.Component {
         this.frontNode.active = true;
 
         this._isRevealed = true;
+        
+        playSFX(this.swipeSFX);
 
         cc.tween(this.node)
             .to(0.1, {scale: 1.2})
@@ -54,16 +61,14 @@ export default class CardBehaviour extends cc.Component {
         this._isLocked = isLocked;
     }
 
-    pairFoundedAnim() {
-        cc.tween(this.node)
+    async pairFoundedAnim(): Promise<void> {
+        return new Promise<void>((resolve) => {
+            cc.tween(this.node)
             .to(0.1, {scale: 1.2})
             .to(0.1, {scale: 1}, {easing: "bounceOut"})
-            .call(() => {
-                if(navigator.vibrate) {
-                    navigator.vibrate(100);
-                }
-            })
+            .call(() => resolve())
             .start();
+        });
     }
 
     async pairErrorAnim(): Promise<void> {
@@ -75,10 +80,6 @@ export default class CardBehaviour extends cc.Component {
                 .by(0.1, { position: new cc.Vec3(20, 0, 0) })
                 .by(0.1, { position: new cc.Vec3(-10, 0, 0) })
                 .call(() => {
-                    if(navigator.vibrate) {
-                        navigator.vibrate(50);
-                    }
-
                     this.hide();
                     resolve();
                 })

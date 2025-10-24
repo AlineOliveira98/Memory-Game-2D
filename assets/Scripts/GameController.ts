@@ -1,4 +1,6 @@
 import CardBehaviour from "./CardBehaviour";
+import { playSFX, playMusic, setSFXVolume, setMusicVolume } from "./Modules/Audio";
+import { playHaptics } from "./Modules/Haptics";
 
 const {ccclass, property} = cc._decorator;
 
@@ -19,6 +21,15 @@ export default class GameController extends cc.Component {
 
     @property([cc.SpriteFrame])
     private cardImages: cc.SpriteFrame[] = [];
+
+    @property(cc.AudioClip)
+    private pairSuccessSFX: cc.AudioClip = null;
+
+    @property(cc.AudioClip)
+    private pairFailSFX: cc.AudioClip = null;
+
+    @property(cc.AudioClip)
+    private music: cc.AudioClip = null;
 
     private _isStarted: boolean = false;
 
@@ -42,6 +53,10 @@ export default class GameController extends cc.Component {
     }
 
     start () {
+        setMusicVolume(0.2);
+        setSFXVolume(0.1);
+
+        playMusic(this.music);
         this.createGame();
     }
 
@@ -112,7 +127,7 @@ export default class GameController extends cc.Component {
         this.lockCards(true);
 
         if(this._cardRevealed.frame === card.frame) {
-            this.pairFound(card);
+            await this.pairSuccess(card);
         } else {
             await this.pairNotFound(card);
         }
@@ -127,16 +142,22 @@ export default class GameController extends cc.Component {
         this.checkGameOver();
     }
 
-    private pairFound(card: CardBehaviour) {
+    private async pairSuccess(card: CardBehaviour) {
         this._pairsRemaining = Math.max(0, this._pairsRemaining-1);
 
         this._cardRevealed.pairFoundedAnim();
-        card.pairFoundedAnim();
+        await card.pairFoundedAnim();
+
+        playHaptics(100);
+        playSFX(this.pairSuccessSFX);
     }
 
     private async pairNotFound(card: CardBehaviour) {
         this._cardRevealed.pairErrorAnim();
         await card.pairErrorAnim();
+
+        playHaptics(50);
+        playSFX(this.pairFailSFX);
     }
 
     private checkGameOver() {
@@ -166,5 +187,4 @@ export default class GameController extends cc.Component {
             element.lock(lock);
         });
     }
-
 }
