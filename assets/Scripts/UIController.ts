@@ -1,4 +1,5 @@
 import GameController from "./GameController";
+import TimeController from "./TimeController";
 
 const {ccclass, property} = cc._decorator;
 
@@ -8,8 +9,14 @@ export default class NewClass extends cc.Component {
     @property(GameController)
     private gameController: GameController = null;
 
+    @property(TimeController)
+    private timeController: TimeController = null;
+
     @property(cc.Label)
     private attemptsLabel: cc.Label = null;
+
+    @property(cc.Label)
+    private timeLabel: cc.Label = null;
 
     protected onLoad(): void {
         this.gameController.node.on("card-clicked", this.setAttempts, this);
@@ -18,6 +25,10 @@ export default class NewClass extends cc.Component {
 
     start () {
         this.setAttempts();
+    }
+
+    protected update(dt: number): void {
+        this.timeLabel.string = `${this.timeController.elapsedTime}`;
     }
 
     setAttempts() {
