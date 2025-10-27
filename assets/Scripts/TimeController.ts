@@ -6,7 +6,11 @@ export default class TimeController extends cc.Component {
     private _canRun: boolean = false;
     private _elapsedTime: number = 0;
 
-    public get elapsedTime(): string {
+    public get elapsedTime(): number {
+        return this._elapsedTime;
+    }
+
+    public get elapsedTimeFormatted(): string {
         return this.formatTime(this._elapsedTime);
     }
     
@@ -14,15 +18,17 @@ export default class TimeController extends cc.Component {
         if(!this._canRun) return;
 
         this._elapsedTime += dt;
-        
-        console.log();
     }
 
     public setEnable(canRun: boolean) {
         this._canRun = canRun;
     }
 
-    private formatTime(seconds: number): string {
+    public reset() {
+        this._elapsedTime = 0;
+    }
+
+    public formatTime(seconds: number): string {
         const min = Math.floor(seconds / 60);
         const sec = Math.floor(seconds % 60);
 

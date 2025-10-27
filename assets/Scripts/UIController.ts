@@ -18,6 +18,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     private timeLabel: cc.Label = null;
 
+    @property(cc.Label)
+    private recordTimeLabel: cc.Label = null;
+
     protected onLoad(): void {
         this.gameController.node.on("card-clicked", this.setAttempts, this);
         this.gameController.node.on("game-created", this.setAttempts, this);
@@ -25,10 +28,13 @@ export default class NewClass extends cc.Component {
 
     start () {
         this.setAttempts();
+
+        const recordTime = cc.sys.localStorage.getItem('record-time');
+        this.recordTimeLabel.string = "Record time: " + this.timeController.formatTime(recordTime);
     }
 
     protected update(dt: number): void {
-        this.timeLabel.string = `${this.timeController.elapsedTime}`;
+        this.timeLabel.string = `${this.timeController.elapsedTimeFormatted}`;
     }
 
     setAttempts() {

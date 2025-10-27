@@ -23,6 +23,10 @@ export default class CardBehaviour extends cc.Component {
     private _isLocked: boolean = false;
     private _isRevealed: boolean = false;
 
+    public get isRevealed(): boolean {
+        return this._isRevealed;
+    }
+
     protected onLoad(): void {
         this.node.on(cc.Node.EventType.TOUCH_END, this.onClick, this);
         this.hide();

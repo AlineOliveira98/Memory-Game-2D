@@ -56,13 +56,41 @@ export default class GameController extends cc.Component {
     public get attemptsRemaining(): number {
         return this._attemptsRemaining;
     }
+
+    protected onLoad(): void {
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.findPair, this);
+    }
     
     start () {
         setMusicVolume(0.2);
         setSFXVolume(0.1);
 
-        playMusic(this.music);
         this.createGame();
+
+        const recordTime = cc.sys.localStorage.getItem('record-time');
+        console.log("record time:", this.timeController.formatTime(recordTime));
+    }
+
+    findPair(event) {
+        if(event.keyCode !== cc.macro.KEY.space) return;
+
+        if(!this._cardRevealed) {
+            for (const element of this._allCards) {
+                if(!element.isRevealed) {
+                    this.onCardClicked(element);
+                    break;
+                }
+            }
+        } else {
+            for (const element of this._allCards) {
+                if(element === this._cardRevealed) continue;
+
+                if(this._cardRevealed.frame === element.frame) {
+                    this.onCardClicked(element);
+                    break;
+                }
+            }
+        }
     }
 
     createGame() {
@@ -73,7 +101,10 @@ export default class GameController extends cc.Component {
         this._isStarted = true;
         this._isGameOver = false;
 
+        this.timeController.reset();
         this.timeController.setEnable(true);
+
+        // playMusic(this.music);
 
         this.node.emit("game-created");
     }
@@ -170,19 +201,22 @@ export default class GameController extends cc.Component {
     private checkGameOver() {
         if(this._pairsRemaining <= 0) {
             this.gameOver(true);
-            this.timeController.setEnable(false);
         } else if(this._attemptsRemaining <= 0) {
             this.gameOver(false); 
-            this.timeController.setEnable(false);  
         } 
     }
 
     private gameOver(isVictory: boolean) {
+        this.timeController.setEnable(false);
+        
         if(isVictory) {
-            console.log("Victory!");
-        } else {
-            console.log("Defeat!");
+            const recordTime = cc.sys.localStorage.getItem('record-time');
+
+            if(recordTime <= 0 || this.timeController.elapsedTime < recordTime)
+                cc.sys.localStorage.setItem('record-time', this.timeController.elapsedTime);
         }
+
+        this.node.emit('game-over');
 
         this._isGameOver = true;
     }

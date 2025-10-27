@@ -309,7 +309,7 @@
     "timeController": {
       "__id__": 7
     },
-    "maxAttempts": 30,
+    "maxAttempts": 45,
     "columsAmount": 6,
     "spaceBetweenCards": {
       "__type__": "cc.Vec2",
@@ -540,7 +540,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100.1,
+      "width": 0,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -1204,6 +1204,9 @@
     },
     "timeLabel": {
       "__id__": 11
+    },
+    "recordTimeLabel": {
+      "__id__": 15
     },
     "_id": "d1MzvBhC9KX69n2nLld9UT"
   },
