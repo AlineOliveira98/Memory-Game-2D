@@ -1,4 +1,6 @@
 import CardBehaviour from "./CardBehaviour";
+import TimeController from "./TimeController";
+
 import { playSFX, playMusic, setSFXVolume, setMusicVolume } from "./Modules/Audio";
 import { playHaptics } from "./Modules/Haptics";
 
@@ -6,6 +8,9 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class GameController extends cc.Component {
+
+    @property(TimeController)
+    private timeController: TimeController = null;
 
     @property({type: cc.Integer})
     private maxAttempts: number = 24;
@@ -67,6 +72,8 @@ export default class GameController extends cc.Component {
         this.spawnCards();
         this._isStarted = true;
         this._isGameOver = false;
+
+        this.timeController.setEnable(true);
 
         this.node.emit("game-created");
     }
@@ -163,8 +170,10 @@ export default class GameController extends cc.Component {
     private checkGameOver() {
         if(this._pairsRemaining <= 0) {
             this.gameOver(true);
+            this.timeController.setEnable(false);
         } else if(this._attemptsRemaining <= 0) {
-            this.gameOver(false);   
+            this.gameOver(false); 
+            this.timeController.setEnable(false);  
         } 
     }
 
